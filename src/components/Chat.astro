@@ -174,17 +174,75 @@ declare global {
     }
 }
 
+// Agregar estas constantes al inicio del script
+const PROHIBITED_WORDS = [
+    // Insultos comunes y variaciones
+    'mierda', 'mrd', 'mrda', 'm13rd4', 'puto', 'put@', 'puta', 'pendejo', 'pdjo', 'idiota',
+    'estupido', 'estupid@', 'imbecil', 'tarado', 'ctm', 'conchatumadre', 'ptm', 'putamadre',
+    'hdp', 'hijodeputa', 'hijo de puta', 'muerete', 'muérete', 'muerte', 'odio',
+    'basura', 'asco', 'asqueroso', 'cerdo', 'animal', 'bestia', 'rata', 'imbécil',
+    'cabron', 'cabrón', 'cabrones', 'maldito', 'maldit@', 'malparido', 'malparido',
+    'weon', 'webon', 'webón', 'chinga', 'chingada', 'jodete', 'jódete',
+    'baboso', 'imbecil', 'estúpido', 'estupida', 'estupid@s',
+    'vete', 'largate', 'lárgate', 'callate', 'cállate',
+    'tonto', 'tonta', 'ton@', 'stupid', 'fuck', 'fck',
+    'maldicion', 'maldición', 'carajo', 'krjo'
+];
+// Agregar estas constantes junto a las otras
+const COOLDOWN_TIME = 3000; // 3 segundos de espera entre mensajes
+const MAX_MESSAGES = 10; // Máximo número de mensajes permitidos
+const SPAM_TIME_WINDOW = 60000; // Ventana de tiempo para contar mensajes (1 minuto)
+const BAN_TIME = 300000; // Tiempo de ban (5 minutos)
+let lastMessageTime = 0;
+let messageHistory = []; // Almacena timestamps de mensajes recientes
+let banEndTime = 0; // Tiempo cuando termina el ban
+
 window.sendMessage = () => {
     const input = document.getElementById('messageInput');
     const message = (input as HTMLInputElement)?.value.trim() ?? '';
+    const currentTime = Date.now();
+
+    // Verificar si el usuario está baneado
+    if (currentTime < banEndTime) {
+        const remainingTime = Math.ceil((banEndTime - currentTime) / 1000);
+        alert(`Has sido temporalmente bloqueado por spam. Espera ${remainingTime} segundos.`);
+        return;
+    }
+    
+    // Verificar tiempo de espera normal
+    if (currentTime - lastMessageTime < COOLDOWN_TIME) {
+        alert('Por favor espera unos segundos antes de enviar otro mensaje');
+        return;
+    }
+
+    // Verificar palabras prohibidas
+    if (PROHIBITED_WORDS.some(word => message.toLowerCase().includes(word))) {
+        alert('Tu mensaje contiene palabras no permitidas');
+        return;
+    }
+
+    // Limpiar mensajes antiguos del historial
+    messageHistory = messageHistory.filter(time => currentTime - time < SPAM_TIME_WINDOW);
+    
+    // Agregar el mensaje actual al historial
+    messageHistory.push(currentTime);
+
+    // Verificar si hay demasiados mensajes en la ventana de tiempo
+    if (messageHistory.length > MAX_MESSAGES) {
+        banEndTime = currentTime + BAN_TIME;
+        alert('Has sido bloqueado por 5 minutos debido a spam excesivo.');
+        messageHistory = []; // Limpiar historial
+        return;
+    }
     
     if (message) {
         push(messagesRef, {
             text: message,
-            timestamp: Date.now()
+            timestamp: currentTime
         });
         (input as HTMLInputElement).value = '';
-        cleanOldMessages(); // Limpiar mensajes antiguos después de enviar uno nuevo
+        lastMessageTime = currentTime;
+        cleanOldMessages();
     }
 };
 
