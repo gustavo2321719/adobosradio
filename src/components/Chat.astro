@@ -94,6 +94,7 @@
 <script>
 import { initializeApp } from 'firebase/app';
 import { getDatabase, ref, push, onValue, query, limitToLast, remove, get } from 'firebase/database';
+import prohibitedWordsData from '../data/prohibited-words.json';
 
 const firebaseConfig = {
   apiKey: "AIzaSyDNvjP735YhjGtJt8j8L29mvdUuFVZR-Q",
@@ -175,20 +176,9 @@ declare global {
 }
 
 // Agregar estas constantes al inicio del script
-const PROHIBITED_WORDS = [
-    // Insultos comunes y variaciones
-    'mierda', 'mrd', 'mrda', 'm13rd4', 'puto', 'put@', 'puta', 'pendejo', 'pdjo', 'idiota',
-    'estupido', 'estupid@', 'imbecil', 'tarado', 'ctm', 'conchatumadre', 'ptm', 'putamadre',
-    'hdp', 'hijodeputa', 'hijo de puta', 'muerete', 'muérete', 'muerte', 'odio',
-    'basura', 'asco', 'asqueroso', 'cerdo', 'animal', 'bestia', 'rata', 'imbécil',
-    'cabron', 'cabrón', 'cabrones', 'maldito', 'maldit@', 'malparido', 'malparido',
-    'weon', 'webon', 'webón', 'chinga', 'chingada', 'jodete', 'jódete',
-    'baboso', 'imbecil', 'estúpido', 'estupida', 'estupid@s',
-    'vete', 'largate', 'lárgate', 'callate', 'cállate',
-    'tonto', 'tonta', 'ton@', 'stupid', 'fuck', 'fck',
-    'maldicion', 'maldición', 'carajo', 'krjo'
-];
-// Agregar estas constantes junto a las otras
+// Reemplazar la constante PROHIBITED_WORDS con:
+const PROHIBITED_WORDS = prohibitedWordsData.prohibitedWords;
+
 const COOLDOWN_TIME = 3000; // 3 segundos de espera entre mensajes
 const MAX_MESSAGES = 10; // Máximo número de mensajes permitidos
 const SPAM_TIME_WINDOW = 60000; // Ventana de tiempo para contar mensajes (1 minuto)
