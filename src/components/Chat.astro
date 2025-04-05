@@ -141,7 +141,7 @@ onValue(messagesQuery, (snapshot) => {
     
     if (messages) {
         Object.entries(messages)
-            .sort(([,b], [,a]) => (b as { timestamp: number }).timestamp - (a as { timestamp: number }).timestamp) // Reversed sort order
+            .sort(([,a], [,b]) => (a as { timestamp: number }).timestamp - (b as { timestamp: number }).timestamp)
             .forEach(([key, message]) => {
                 const messageElement = document.createElement('div');
                 messageElement.className = 'message';
