@@ -1,4 +1,5 @@
 ---
+import Chat from '../components/Chat.astro';
 ---
 
 <!DOCTYPE html>
@@ -32,6 +33,7 @@
                 <a href="https://linktr.ee/Adobolatam" target="_blank"> <img src="/image/linked.png" alt="linked"></a>
             </div>
         </div>
+        
         <img src="/image/Ado comi.png" alt="Radio Mascot" class="mascot-image">
 
     </div>
@@ -39,6 +41,7 @@
     <footer class="footer">
         <p>2025 Adobo Radio | Marca pendiente de registro. Comunidad fan sin ánimo de lucro, sin contacto oficial con ninguna productora ni marca relacionada. Todos los derechos reservados.</p>
         <p>Programación por: Gustavo Nazario</p>
+        <Chat />
     </footer>
     
 </body>
@@ -271,7 +274,7 @@ h2 {
 
 .footer {
     background-color: #333;
-    color: #fff;
+    
     text-align: center;
     padding: 20px;
     height: auto;
@@ -280,6 +283,7 @@ h2 {
 }
 
 .footer p {
+    color: #fff;
     margin: 0;
     padding: 0 20px;
     line-height: 1.5;
