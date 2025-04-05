@@ -1,6 +1,6 @@
 ---
 ---
-<div class="chat-box" client:load>
+</div>
     <div id="messages" class="messages"></div>
     <div class="input-area">
         <input type="text" id="messageInput" placeholder="Escribe un mensaje..." onkeypress="handleKeyPress(event)">
@@ -8,13 +8,13 @@
     </div>
 </div>
 
-<style>
+<style is:global>
 .chat-box {
     background: white;
     border-radius: 10px;
     padding: 15px;
     margin-top: 20px;
-    width: 320px;
+    width: auto;
     height: 400px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
@@ -25,24 +25,6 @@
     padding: 10px;
     background: #f5f5f5;
     border-radius: 5px;
-}
-
-.message {
-    background: rgb(0, 0, 0);
-    padding: 8px;
-    margin-bottom: 8px;
-    border-radius: 5px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-}
-
-.message-text {
-    display: block;
-    margin-bottom: 4px;
-}
-
-.message-time {
-    font-size: 0.8em;
-    color: #666;
 }
 
 .input-area {
@@ -70,6 +52,42 @@
 
 .input-area button:hover {
     background: #1873cc;
+}
+
+.message {
+    background: rgb(119, 119, 119);
+    padding: 8px;
+    margin-bottom: 8px;
+    border-radius: 5px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    color: white;
+}
+
+.message-text {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 16px; /* Default size for desktop */
+}
+
+.message-time {
+    font-size: 0.8em;
+    color: #afacac;
+}
+
+/* Media query for mobile devices */
+@media screen and (max-width: 768px) {
+    .message-text {
+        font-size: 14px; /* Smaller size for mobile */
+    }
+    
+    .message-time {
+        font-size: 0.7em; /* Smaller time display for mobile */
+    }
+}
+@media screen and (max-width: 480px) {
+    .message-text {
+        font-size: 12px; /* Even smaller for very small devices */
+    }
 }
 </style>
 
@@ -101,7 +119,7 @@ async function cleanOldMessages() {
         const messageArray = Object.entries(messages);
         if (messageArray.length > 100) {
             const messagesToDelete = messageArray
-                .sort(([,a], [,b]) => b.timestamp - a.timestamp)
+                .sort(([,a], [,b]) => (b as { timestamp: number }).timestamp - (a as { timestamp: number }).timestamp)
                 .slice(100);
             
             messagesToDelete.forEach(([key]) => {
@@ -116,44 +134,70 @@ const messagesQuery = query(messagesRef, limitToLast(100));
 onValue(messagesQuery, (snapshot) => {
     const messages = snapshot.val();
     const messagesDiv = document.getElementById('messages');
-    messagesDiv.innerHTML = '';
+    if (messagesDiv) {
+        messagesDiv.innerHTML = '';
+    }
     
     if (messages) {
         Object.entries(messages)
-            .sort(([,a], [,b]) => a.timestamp - b.timestamp)
+            .sort(([,a], [,b]) => (a as { timestamp: number }).timestamp - (b as { timestamp: number }).timestamp)
             .forEach(([key, message]) => {
                 const messageElement = document.createElement('div');
                 messageElement.className = 'message';
+                // Add the styles directly to the element
+                messageElement.style.background = 'rgb(119, 119, 119)';
+                messageElement.style.padding = '8px';
+                messageElement.style.marginBottom = '8px';
+                messageElement.style.borderRadius = '5px';
+                messageElement.style.boxShadow = '0 1px 2px rgba(0,0,0,0.1)';
+                messageElement.style.color = 'white';
+                
                 messageElement.innerHTML = `
-                    <span class="message-text">${message.text}</span>
-                    <span class="message-time">${new Date(message.timestamp).toLocaleTimeString()}</span>
+                    <span class="message-text">${(message as { text: string }).text}</span>
+                    <span class="message-time">${new Date((message as { timestamp: number }).timestamp).toLocaleTimeString()}</span>
                 `;
-                messagesDiv.appendChild(messageElement);
+                if (messagesDiv) {
+                    messagesDiv.appendChild(messageElement);
+                }
             });
         
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        if (messagesDiv) {
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
     }
 });
 
 // Modificar la función de envío para incluir la limpieza
+declare global {
+    interface Window {
+        sendMessage: () => void;
+    }
+}
+
 window.sendMessage = () => {
     const input = document.getElementById('messageInput');
-    const message = input.value.trim();
+    const message = (input as HTMLInputElement)?.value.trim() ?? '';
     
     if (message) {
         push(messagesRef, {
             text: message,
             timestamp: Date.now()
         });
-        input.value = '';
+        (input as HTMLInputElement).value = '';
         cleanOldMessages(); // Limpiar mensajes antiguos después de enviar uno nuevo
     }
 };
 
 // Add this new function to handle Enter key
+declare global {
+    interface Window {
+        handleKeyPress: (event: KeyboardEvent) => void;
+    }
+}
+
 window.handleKeyPress = (event) => {
     if (event.key === 'Enter') {
-        sendMessage();
+        window.sendMessage();
     }
 };
 </script>
