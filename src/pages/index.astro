@@ -342,7 +342,8 @@ h2 {
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 1000;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start; /* Changed from center to flex-start */
+    overflow-y: auto; /* Added overflow-y */
 }
 
 .modal-content {
@@ -352,11 +353,17 @@ h2 {
     max-width: 500px;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    margin: auto;
-    margin-top: 5vh;
+    margin: 5vh auto; /* Changed margin-top to margin */
     background-color: #2e2535;
-    overflow: hidden;
-    height: auto;
+    overflow-y: visible; /* Changed from hidden to visible */
+    height: auto; /* Changed from max-height */
+    min-height: 90vh; /* Added min-height */
+}
+
+#disqus_thread {
+    width: 100%;
+    height: 100%;
+    overflow-y: visible; /* Added to ensure Disqus content is scrollable */
 }
 
 /* Styles for the Chat component container */
