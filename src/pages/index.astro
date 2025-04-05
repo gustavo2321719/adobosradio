@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Adobos Radio</title>
-    <link rel="icon" type="image/png" href="./public/image/icon.png">
+    <link rel="icon" type="image/png" href="/image/icon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
@@ -17,7 +17,7 @@
             <div class="player-container">
                 <h2>EN VIVO</h2>
                 <button class="play-button" onclick="togglePlay()">
-                    <img src="./public/image/play.png" alt="Play" id="play-icon">
+                    <img src="/image/play.png" alt="Play" id="play-icon">
                 </button>
                 <audio id="radio-player" class="audio-player">
                     <source src="https://redirector.dps.live/biobiosantiago/mp3/icecast.audio" type="audio/mpeg">
@@ -25,14 +25,14 @@
                 </audio>
             </div>
             <div class="social-links">
-                <img id="logo" src="./public/image/logo.png" alt="Adobos Radio Logo" class="logo">  
-                <a href="https://open.spotify.com/show/16BTrcFzNNwy9LmhdFaxaW?si=2c7bf6eb82e94770" target="_blank"><img src="./public/image/spotify.png" alt="spotify"></i></a>
-                <a href="https://www.youtube.com/@Adobo-latam" target="_blank"><img src="./public/image/youtube.png" alt="youtube"></i></a>
-                <a href="https://www.instagram.com/adobolatam?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank"><img src="./public/image/ig.png" alt="ig"></i></a>
-                <a href="https://linktr.ee/Adobolatam" target="_blank"> <img src="./public/image/linked.png" alt="linked"></a>
+                <img id="logo" src="/image/logo.png" alt="Adobos Radio Logo" class="logo">  
+                <a href="https://open.spotify.com/show/16BTrcFzNNwy9LmhdFaxaW?si=2c7bf6eb82e94770" target="_blank"><img src="/image/spotify.png" alt="spotify"></i></a>
+                <a href="https://www.youtube.com/@Adobo-latam" target="_blank"><img src="/image/youtube.png" alt="youtube"></i></a>
+                <a href="https://www.instagram.com/adobolatam?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank"><img src="/image/ig.png" alt="ig"></i></a>
+                <a href="https://linktr.ee/Adobolatam" target="_blank"> <img src="/image/linked.png" alt="linked"></a>
             </div>
         </div>
-        <img src="./public/image/Ado comi.png" alt="Radio Mascot" class="mascot-image">
+        <img src="/image/Ado comi.png" alt="Radio Mascot" class="mascot-image">
 
     </div>
 </div>
@@ -59,7 +59,7 @@ body {
     font-family: Arial, sans-serif;
     background-color: #1a1a2e;
     color: #000000;
-    background-image: url('./public/image/fondo.png');
+    background-image: url('/image/fondo.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -295,17 +295,15 @@ function togglePlay() {
     const playIcon = document.getElementById('play-icon') as HTMLImageElement;
     
     if (audio && playIcon) {
+        // In your script section
         if (audio.paused) {
             audio.play()
                 .then(() => {
-                    playIcon.src = './public/image/pause.png';
+                    playIcon.src = '/image/pause.png';
                 })
-                .catch(error => {
-                    console.error('Error playing audio:', error);
-                });
         } else {
             audio.pause();
-            playIcon.src = './public/image/play.png';
+            playIcon.src = '/image/play.png';
         }
     }
 }
