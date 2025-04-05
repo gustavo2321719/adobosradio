@@ -1,9 +1,7 @@
 import { defineConfig } from 'astro/config';
-import node from '@astrojs/node';
 
 export default defineConfig({
-    output: 'server',
-    adapter: node({
-        mode: 'standalone'
-    })
+  output: 'static',
+  site: 'https://adobosradio.vercel.app/', // Replace with your actual Vercel deployment URL
+  base: '/',
 });
